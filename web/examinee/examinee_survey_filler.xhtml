@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./examinee_templ.xhtml">
+
+            <ui:define name="content">
+
+                <h:form><p:commandButton value="Nazad"
+                                         actionListener="#{examineeController.toSurveysView()}"></p:commandButton></h:form>
+                <h:form id="main_form">
+
+                    <p:panelGrid columns="1" style="margin:0 auto">
+                        <h:outputText value="#{examineeController.filledSurvey.form.name}"></h:outputText>
+                        <h:outputText value="#{examineeController.filledSurvey.form.basicInfo}"></h:outputText>
+
+                        <p:dataView value="#{examineeController.surveyFiller.answeredQuestionBuilders}" var="aqBuilder" rows="#{examineeController.questionsPerPage}" paginator="true"
+                                    paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+                            <p:dataViewListItem>
+                                <p:panelGrid columns="1" style="width:100%">
+                                    <h:outputText value="#{aqBuilder.q.text}"></h:outputText>
+                                    <p:inputText value="#{aqBuilder.strAnswer}"
+                                                 rendered="#{aqBuilder.q.answer.type=='NUMBER' or aqBuilder.q.answer.type=='SHORT_TEXT'}"
+                                                 required="#{aqBuilder.q.required}"
+                                                 disabled="#{not examineeController.surveyFiller.editable}"></p:inputText>
+
+                                    <p:inputTextarea value="#{aqBuilder.strAnswer}"
+                                                     rendered="#{aqBuilder.q.answer.type=='TEXT_AREA'}"
+                                                     required="#{aqBuilder.q.required}"
+                                                     disabled="#{not examineeController.surveyFiller.editable}"></p:inputTextarea>
+
+                                    <p:selectOneRadio value="#{aqBuilder.strAnswer}"
+                                                      rendered="#{aqBuilder.q.answer.type=='CHOOSE_ONE'}"
+                                                      required="#{aqBuilder.q.required}"
+                                                      disabled="#{not examineeController.surveyFiller.editable}">
+                                        <f:selectItems value="#{aqBuilder.labels}" var="label" itemLabel="#{label}" itemValue="#{label}" />
+                                    </p:selectOneRadio>
+
+                                    <p:selectManyCheckbox value="#{aqBuilder.strAnswers}"
+                                                          rendered="#{aqBuilder.q.answer.type=='CHOOSE_MANY'}"
+                                                          required="#{aqBuilder.q.required}"
+                                                          disabled="#{not examineeController.surveyFiller.editable}">
+                                        <f:selectItems value="#{aqBuilder.labels}" var="label" itemLabel="#{label}" itemValue="#{label}" />
+                                    </p:selectManyCheckbox>            
+                                </p:panelGrid>
+                            </p:dataViewListItem>
+                        </p:dataView>
+
+                        <p:commandButton type="submit" value="Zavrsi popunjavanje" update="main_form" 
+                                         actionListener="#{examineeController.submitSurvey()}" 
+                                         disabled="#{not examineeController.surveyFiller.editable}"></p:commandButton>
+                    </p:panelGrid>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

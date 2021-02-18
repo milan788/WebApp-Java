@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Registracija</title>
+        <h:outputStylesheet name="css/indexLayout.css"/>
+    </h:head>
+    <h:body>
+        <div id="parent">
+            <h:form id="form_login">
+                <p:panelGrid columns="1">
+                    <h:outputText value="#{registrationController.errorMessage}"></h:outputText>
+                    <p:inputText placeholder="Ime" 
+                                 value="#{registrationController.name}"
+                                 id="name"
+                                 required="true"
+                                 requiredMessage="Obavezno polje"></p:inputText>
+                    <p:message for="name"></p:message>
+                    <p:inputText placeholder="Prezime" 
+                                 id="surname"
+                                 value="#{registrationController.surname}" 
+                                 required="true"
+                                 requiredMessage="Obavezno polje"></p:inputText>
+                    <p:message for="surname"></p:message>
+                    <p:inputText placeholder="Korisnicko ime" 
+                                 required="true"
+                                 id="username"
+                                 requiredMessage="Obavezno polje"
+                                 value="#{registrationController.username}"></p:inputText>
+                    <p:message for="username"></p:message>
+                    <p:password placeholder="Lozinka" 
+                                required="true"
+                                id="pass"
+                                requiredMessage="Obavezno polje"
+                                value="#{registrationController.password}"></p:password>
+                    <p:message for="pass"></p:message>
+                    <p:password placeholder="Potvrda lozinke" 
+                                value="#{registrationController.password2}"
+                                required="true"
+                                id="pass2"
+                                requiredMessage="Obavezno polje"></p:password>
+                    <p:message for="pass2"></p:message>
+                    <p:calendar id="dateOfBirth"
+                                navigator="true"
+                                pattern="dd/MM/yyyy"
+                                yearRange="c-100:c+100"
+                                value="#{registrationController.dateOfBirth}"
+                                required="true"
+                                requiredMessage="Obavezno polje"></p:calendar>
+                    <p:message for="dateOfBirth"></p:message>
+                    <p:inputText placeholder="Mesto rodjenja" 
+                                 required="true"
+                                 requiredMessage="Obavezno polje"
+                                 value="#{registrationController.placeOfBirth}"></p:inputText>
+                    <p:message for="name"></p:message>
+                    <p:inputText placeholder="JMBG" 
+                                 id="jmbg"
+                                 required="true"
+                                 requiredMessage="Obavezno polje"
+                                 value="#{registrationController.jmbg}"></p:inputText>
+                    <p:message for="jmbg"></p:message>
+                    <p:inputText placeholder="Telefon"
+                                 id="phone"
+                                 required="true"
+                                 requiredMessage="Obavezno polje"
+                                 value="#{registrationController.phoneNumber}"></p:inputText>
+                    <p:message for="phone"></p:message>
+                    <p:inputText placeholder="E-mail" 
+                                 id="email"
+                                 required="true"
+                                 requiredMessage="Obavezno polje"
+                                 value="#{registrationController.email}"></p:inputText>
+                    <p:message for="email"></p:message>
+                    <p:fileUpload fileUploadListener="#{registrationController.loadPicture}" 
+                                  id="pic"
+                                  mode="advanced" 
+                                  dragDropSupport="false"
+                                  sizeLimit="100000" 
+                                  fileLimit="3" 
+                                  allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+                                  required="true"
+                                  requiredMessage="Obavezno polje"/>
+                    <p:selectOneMenu value="#{registrationController.type}">
+                        <p:message for="pic"></p:message>
+                        <f:selectItem itemLabel="Admin" itemValue="admin"></f:selectItem>
+                        <f:selectItem itemLabel="Ispitanik" itemValue="examinee"></f:selectItem>
+                        <f:selectItem itemLabel="Autor" itemValue="author"></f:selectItem>
+                    </p:selectOneMenu>
+                    <p:commandButton value="Registracija" update="form_login" actionListener="#{registrationController.submitRegistrationAndSendRequest()}"></p:commandButton>
+                </p:panelGrid>
+            </h:form>   
+        </div>
+    </h:body>
+</html>
+

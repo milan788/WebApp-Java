@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="./examinee_templ.xhtml">
+
+            <ui:define name="content">
+                <h:form id="main_form">
+                        <h:outputText id="txt_count" value="#{examineeController.timeLeft}" rendered="#{examineeController.testFiller.editable}"/><br/>
+                        <h:outputText value="#{examineeController.timeMessage}" rendered="#{examineeController.testFiller.editable}"></h:outputText><br/>
+                        <p:poll interval="1" 
+                                listener="#{examineeController.timerUpdate()}" 
+                                update="main_form" 
+                                rendered="#{examineeController.testFiller.editable}"/><br/>
+                    <p:panelGrid columns="2">
+
+                        <h:outputText value='Broj uradjenih pitanja: '></h:outputText>
+                        <h:outputText value="#{examineeController.testFiller.answeredQuestionBuilders.size()} /
+                                      #{examineeController.testToView.questions.size()}"></h:outputText>
+
+                        <p:commandButton value="Vrati se na resavanje" action="examinee_test_filler"></p:commandButton>
+                        <p:commandButton value="Predaj odgovore i zavrsi test" action="#{examineeController.archiveTest()}"></p:commandButton>
+
+                    </p:panelGrid>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

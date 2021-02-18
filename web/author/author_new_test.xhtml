@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./author.xhtml">
+
+            <ui:define name="content">
+
+                <h:form style="width: 80%;margin: 0 auto" id="main_form">                    
+                    <p:panelGrid columns="1" layout="grid">
+                        <h:outputText value="Nov test" style="font-weight: bolder"></h:outputText>
+
+                        <p:outputLabel for="name">Ime testa</p:outputLabel>
+                        <p:inputText id="name" value="#{authorController.testInfoBuilder.name}" style="width: 80%"/>
+
+                        <p:outputLabel for="basicInfo">Osnovne informacije o testu</p:outputLabel>
+                        <p:inputTextarea id="basicInfo" value="#{authorController.testInfoBuilder.basicInfo}" style="width: 80%"></p:inputTextarea>
+
+                        <p:outputLabel for="startTime">Pocetak testa</p:outputLabel>
+                        <p:inputText id="startTime" placeholder="DD.MM.YYYY." value="#{authorController.testInfoBuilder.startTime}">
+                            <f:convertDateTime pattern="dd.MM.yyyy."/>
+                        </p:inputText>
+
+                        <p:outputLabel for="endTime">Kraj testa</p:outputLabel>
+                        <p:inputText id="endTime" placeholder="DD.MM.YYYY." value="#{authorController.testInfoBuilder.endTime}">
+                            <f:convertDateTime pattern="dd.MM.yyyy."/>
+                        </p:inputText>
+
+                        <p:outputLabel for="duration">Trajanje izrade</p:outputLabel>
+                        <p:inputText id="duration" placeholder="(min)" value="#{authorController.testInfoBuilder.duration}" ></p:inputText>
+
+                    </p:panelGrid>
+
+                    <p:repeat value="#{authorController.testInfoBuilder.questionBuilders}" var="qBuilder">
+                        <p:panelGrid columns="1" layout="grid" style="width:100%"> 
+                            <h:outputText value="#{qBuilder.text}" style="font-weight: bolder"></h:outputText>
+                            <h:outputText value="#{qBuilder.points}" style="font-weight: bolder"></h:outputText>
+
+                            <p:outputLabel for="correctAnswers"
+                                           rendered="#{qBuilder.answerType=='CHOOSE_MANY'}">Tacni odgovori</p:outputLabel>
+                            <p:chips id="correctAnswers" placeholder="" value="#{qBuilder.correctAnswers}"
+                                     rendered="#{qBuilder.answerType=='CHOOSE_MANY'}"></p:chips>
+
+                            <p:outputLabel for="incorrectAnswers"
+                                           rendered="#{qBuilder.answerType == 'CHOOSE_ONE' || qBuilder.answerType=='CHOOSE_MANY'}">Netacni odgovori</p:outputLabel>
+                            <p:chips id="incorrectAnswers" placeholder="Netacni odgvori" value="#{qBuilder.incorrectAnswers}"
+                                     rendered="#{qBuilder.answerType == 'CHOOSE_ONE' || qBuilder.answerType=='CHOOSE_MANY'}"></p:chips>
+
+                            <p:outputLabel for="correctAnswer"
+                                           rendered="#{qBuilder.answerType == 'NUMBER' || qBuilder.answerType=='SHORT_TEXT' || qBuilder.answerType=='CHOOSE_ONE'}">Tacan odgovor</p:outputLabel>
+                            <p:inputText id="correctAnswer" placeholder="Tacan odgovor" value="#{qBuilder.correctAnswer}" 
+                                         rendered="#{qBuilder.answerType == 'NUMBER' || qBuilder.answerType=='SHORT_TEXT' || qBuilder.answerType=='CHOOSE_ONE'}"></p:inputText>
+
+                            <p:commandButton actionListener="#{authorController.testInfoBuilder.questionBuilders.remove(qBuilder)}" 
+                                             value="Ukloni pitanje" update="main_form"></p:commandButton>
+                        </p:panelGrid>
+                        <hr />
+                    </p:repeat>
+                    <p:separator />
+                    <p:panelGrid columns="1" layout="grid">
+                        <row><h:outputText value="Novo pitanje" style="font-weight: bolder"></h:outputText></row>
+                        <p:outputLabel for="Qtext">Tekst pitanja</p:outputLabel>
+                        <p:inputText id="Qtext" value="#{authorController.testInfoBuilder.newQuestionText}" style="width: 80%"/>
+
+                        <p:outputLabel for="Qpoints">Broj poena</p:outputLabel>
+                        <p:inputNumber id="Qpoints" value="#{authorController.testInfoBuilder.newQuestionPoints}"></p:inputNumber>
+
+                        <p:outputLabel for="Qtype">Tip</p:outputLabel>
+                        <p:selectOneMenu id="Qtype" value="#{authorController.testInfoBuilder.newAnswerType}">                                
+                            <f:selectItem itemLabel="Unos broja" itemValue="NUMBER" />
+                            <f:selectItem itemLabel="Unos kratkog teksta" itemValue="SHORT_TEXT" />
+                            <f:selectItem itemLabel="Odaberi jedan" itemValue="CHOOSE_ONE" />
+                            <f:selectItem itemLabel="Odaberi vise" itemValue="CHOOSE_MANY" />
+                        </p:selectOneMenu>
+
+                        <p:commandButton actionListener="#{authorController.testInfoBuilder.addQuestionBuilder()}"
+                                         update="main_form"
+                                         value="Dodaj novo pitanje"></p:commandButton>
+                    </p:panelGrid>
+
+                    <p:commandButton type="submit" actionListener="#{authorController.submitNewTest()}" 
+                                     value="Sacuvaj test"></p:commandButton>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

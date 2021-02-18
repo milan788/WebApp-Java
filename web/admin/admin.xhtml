@@ -1,0 +1,125 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="admin_templ.xhtml">
+            <ui:define name="admin_content">
+                <style type="text/css"> 
+                    .ui-dataview-list .ui-dataview-row {
+                        border-bottom: 1px solid #A8A8A8;
+                        padding: 25px 10px;
+                        border-bottom-color: #A8A8A8;
+                    }
+
+                    .logo {
+                        width: 5%;
+                    }
+                    .detail {
+                        width: 85%;
+                        padding-left: 25px;
+                    }
+                </style>
+
+                <h:form id="form">
+                    <p:dataView var="req" value="#{adminController.requests}" rows="12" paginator="true" rowsPerPageTemplate="6,12,16"
+                                paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                gridIcon="pi pi-th-large" listIcon="pi pi-bars">
+
+                        <p:dataViewGridItem>
+                            <p:panel header="#{req.name}" style="text-align:center">
+                                <h:panelGrid columns="1" style="width:100%">
+                                    <!--<p:graphicImage name=""/>!-->
+
+                                    <h:outputText value="#{req.username}" />
+
+                                    <p:commandLink update=":form:reqDetail" oncomplete="PF('reqDialog').show()" title="View Detail">
+                                        <h:outputText value="Prikazi detalje" style="margin:0 auto;" />
+                                        <f:setPropertyActionListener value="#{req}" target="#{adminController.selectedReq}" />
+                                    </p:commandLink>
+                                </h:panelGrid>
+                            </p:panel>
+                        </p:dataViewGridItem>
+
+                        <p:dataViewListItem>
+                            <h:panelGrid columns="3" style="width:100%" columnClasses="logo,detail">
+
+                                <p:outputPanel>
+                                    <h:panelGrid columns="2" cellpadding="5">
+
+                                        <h:outputText value="Ime" />
+                                        <h:outputText value="#{req.name}" />
+
+                                        <h:outputText value="Prezime" />
+                                        <h:outputText value="#{req.surname}" />
+
+                                        <h:outputText value="Korisnicko ime" />
+                                        <h:outputText value="#{req.username}" />
+
+                                        <h:outputText value="Tip" />
+                                        <h:outputText value="#{req.type}" />
+                                    </h:panelGrid>
+                                </p:outputPanel>
+
+                                <p:commandLink update=":form:reqDetail" oncomplete="PF('reqDialog').show()" title="View Detail">
+                                    <h:outputText value="Prikazi detalje" style="margin:0 auto;" />
+                                    <f:setPropertyActionListener value="#{req}" target="#{adminController.selectedReq}" />
+                                </p:commandLink>
+                            </h:panelGrid>
+                        </p:dataViewListItem>
+                    </p:dataView>
+
+                    <p:dialog header="Zahtev info" widgetVar="reqDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                        <p:outputPanel id="reqDetail" style="text-align:center;">
+                            <p:panelGrid  columns="2" rendered="#{not empty adminController.selectedReq}" columnClasses="label,value">
+
+                                <h:outputText value="Ime" />
+                                <h:outputText value="#{adminController.selectedReq.name}" />
+
+                                <h:outputText value="Prezime" />
+                                <h:outputText value="#{adminController.selectedReq.surname}" />
+
+                                <h:outputText value="Korisnicko ime" />
+                                <h:outputText value="#{adminController.selectedReq.username}" />
+
+                                <h:outputText value="Datum rodjenja" />
+                                <h:outputText value="#{adminController.selectedReq.dateOfBirth.toString()}" />
+
+                                <h:outputText value="Mesto rodjenja" />
+                                <h:outputText value="#{adminController.selectedReq.placeOfBirth}" />
+
+                                <h:outputText value="JMBG" />
+                                <h:outputText value="#{adminController.selectedReq.jmbg}" />
+
+                                <h:outputText value="Telefon" />
+                                <h:outputText value="#{adminController.selectedReq.phoneNumber}" />
+
+                                <h:outputText value="E-mail" />
+                                <h:outputText value="#{adminController.selectedReq.email}" />
+
+                                <h:outputText value="Tip" />
+                                <h:outputText value="#{adminController.selectedReq.type}" />
+
+                                <p:commandButton value="Prihvati" actionListener="#{adminController.accept()}" 
+                                                 rendered="#{not empty adminController.selectedReq}"
+                                                 update="form"></p:commandButton>
+                                <p:commandButton value="Odbaci" actionListener="#{adminController.deny()}"
+                                                 rendered="#{not empty adminController.selectedReq}"
+                                                 update="form"></p:commandButton>
+                                <h:outputText value="Zahtev je obradjen"
+                                              rendered="#{empty adminController.selectedReq}"></h:outputText>
+                            </p:panelGrid>
+                        </p:outputPanel>
+                    </p:dialog>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

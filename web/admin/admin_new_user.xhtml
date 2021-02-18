@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <body>
+
+        <ui:composition template="./admin_templ.xhtml">
+
+            <ui:define name="admin_content">
+                <h:form id="form_reg" >
+                    <p:panelGrid columns="1" style="margin: 0 auto">
+                        #{registrationController.errorMessage}
+                        <p:inputText placeholder="Ime" 
+                                     value="#{registrationController.name}"
+                                     id="name"
+                                     required="true"></p:inputText>
+                        <p:inputText placeholder="Prezime" 
+                                     value="#{registrationController.surname}" 
+                                     required="true"></p:inputText>
+                        <p:inputText placeholder="Korisnicko ime" 
+                                     required="true"
+                                     value="#{registrationController.username}"></p:inputText>
+                        <p:password placeholder="Lozinka" 
+                                    required="true"
+                                    value="#{registrationController.password}"></p:password>
+                        <p:password placeholder="Potvrda lozinke" 
+                                    required="true"></p:password>                       
+                        <p:inputText placeholder="DD.MM.YYYY"
+                                     required="true"
+                                     value="#{registrationController.dateOfBirth}">
+                            <f:convertDateTime pattern="dd.mm.yyyy"/>
+                        </p:inputText>
+                        <p:inputText placeholder="Mesto rodjenja" 
+                                     required="true"
+                                     value="#{registrationController.placeOfBirth}"></p:inputText>
+                        <p:inputText placeholder="JMBG" 
+                                     required="true"
+                                     value="#{registrationController.jmbg}"></p:inputText>
+                        <p:inputText placeholder="Telefon" 
+                                     required="true"
+                                     value="#{registrationController.phoneNumber}"></p:inputText>
+                        <p:inputText placeholder="E-mail" 
+                                     required="true"
+                                     value="#{registrationController.email}"></p:inputText>
+                        <p:fileUpload fileUploadListener="#{registrationController.loadPicture}" 
+                                      mode="advanced" 
+                                      dragDropSupport="false"
+                                      sizeLimit="100000" 
+                                      fileLimit="3" 
+                                      allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
+                        <p:selectOneMenu value="#{registrationController.type}">
+                            <f:selectItem itemLabel="Admin" itemValue="admin"></f:selectItem>
+                            <f:selectItem itemLabel="Ispitanik" itemValue="examinee"></f:selectItem>
+                            <f:selectItem itemLabel="Autor" itemValue="author"></f:selectItem>
+                        </p:selectOneMenu>
+                        <p:commandButton value="Napravi korisnika" update="form_reg" 
+                                         actionListener="#{registrationController.addUserAsAdmin()}"></p:commandButton>
+                    </p:panelGrid>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

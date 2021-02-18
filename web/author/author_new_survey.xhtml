@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./author.xhtml">
+
+            <ui:define name="content">
+
+                <h:form style="width: 80%;margin: 0 auto" id="main_form">                    
+                    <p:panelGrid columns="1" layout="grid">
+                        <h:outputText value="Nova anketa" style="font-weight: bolder"></h:outputText>
+
+                        <p:outputLabel for="name">Ime ankete</p:outputLabel>
+                        <p:inputText id="name" value="#{authorController.surveyInfoBuilder.name}" style="width: 80%"/>
+
+                        <p:outputLabel for="basicInfo">Osnovne informacije o anketi</p:outputLabel>
+                        <p:inputTextarea id="basicInfo" value="#{authorController.surveyInfoBuilder.basicInfo}" style="width: 80%"></p:inputTextarea>
+
+                        <p:outputLabel for="startTime">Pocetak ankete</p:outputLabel>
+                        <p:inputText id="startTime" placeholder="DD.MM.YYYY" value="#{authorController.surveyInfoBuilder.startTime}">
+                            <f:convertDateTime pattern="dd.MM.yyyy"/>
+                        </p:inputText>
+
+                        <p:outputLabel for="endTime">Kraj ankete</p:outputLabel>
+                        <p:inputText id="endTime" placeholder="DD.MM.YYYY" value="#{authorController.surveyInfoBuilder.endTime}">
+                            <f:convertDateTime pattern="dd.MM.yyyy"/>
+                        </p:inputText>
+
+                        <p:outputLabel for="numOfPages">Broj strana</p:outputLabel>
+                        <p:inputText id="numOfPages" value="#{authorController.surveyInfoBuilder.numOfPages}" ></p:inputText>
+
+                        <p:selectBooleanCheckbox value="#{authorController.surveyInfoBuilder.personalized}" itemLabel="Personalizovana"/>
+                    </p:panelGrid>
+
+                    <p:separator />
+
+                    <p:repeat value="#{authorController.surveyInfoBuilder.questionBuilders}" var="qBuilder">
+                        <p:panelGrid columns="1" layout="grid" style="width:100%"> 
+                            <h:outputText value="#{qBuilder.text}" style="font-weight: bolder"></h:outputText>
+
+                            <p:outputLabel for="labels"
+                                           rendered="#{qBuilder.answerType!='TEXT_AREA'}">Labele</p:outputLabel>
+                            <p:chips id="labels" value="#{qBuilder.labels}"
+                                     rendered="#{qBuilder.answerType!='TEXT_AREA'}"></p:chips>
+
+                            <p:commandButton actionListener="#{authorController.surveyInfoBuilder.questionBuilders.remove(qBuilder)}" 
+                                             value="Ukloni pitanje" update="main_form"></p:commandButton>
+                        </p:panelGrid>
+                        <hr />
+                    </p:repeat>
+
+                    <p:separator />
+
+                    <p:panelGrid columns="1" layout="grid">
+                        <row><h:outputText value="Novo pitanje" style="font-weight: bolder"></h:outputText></row>
+                        <p:outputLabel for="Qtext">Tekst pitanja</p:outputLabel>
+                        <p:inputText id="Qtext" value="#{authorController.surveyInfoBuilder.newQuestionText}" style="width: 80%"/>
+
+                        <p:outputLabel for="Qtype">Tip</p:outputLabel>
+                        <p:selectOneMenu id="Qtype" value="#{authorController.surveyInfoBuilder.newAnswerType}">                                
+                            <f:selectItem itemLabel="Unos broja" itemValue="NUMBER" />
+                            <f:selectItem itemLabel="Unos kratkog teksta" itemValue="SHORT_TEXT" />
+                            <f:selectItem itemLabel="Unos duzeg teksta" itemValue="TEXT_AREA"/>
+                            <f:selectItem itemLabel="Odaberi jedan" itemValue="CHOOSE_ONE" />
+                            <f:selectItem itemLabel="Odaberi vise" itemValue="CHOOSE_MANY" />
+                        </p:selectOneMenu>
+                        
+                        <p:commandButton actionListener="#{authorController.surveyInfoBuilder.addQuestionBuilder()}"
+                                         update="main_form"
+                                         value="Dodaj novo pitanje"></p:commandButton>
+                        
+                    </p:panelGrid>
+
+                    <p:commandButton type="submit" actionListener="#{authorController.submitNewSurvey()}" 
+                                     value="Sacuvaj anketu" update="main_form"></p:commandButton>
+                </h:form>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

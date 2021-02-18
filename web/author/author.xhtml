@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+        <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        </head>
+    <body>
+
+        <ui:composition template="../user_template.xhtml">
+
+            <ui:define name="bottom">
+                <h:form>
+                    <p:menubar>
+                        <p:menuitem value="Novi test" actionListener="#{authorController.toNewTest()}" update="messages" ajax="false"/>
+                        <p:menuitem value="Nova anketa" actionListener="#{authorController.toNewSurvey()}" update="messages" ajax="false"/>
+                        <p:menuitem value="Pregled testova" actionListener="#{authorController.toTestsView()}" update="messages" ajax="false"/>
+                        <p:menuitem value="Pregled anketa"  actionListener="#{authorController.toSurveyView()}" update="messages" ajax="false"/>
+                    </p:menubar>
+                </h:form>
+            </ui:define>
+
+            <ui:define name="content">
+                <ui:insert name="content">Content</ui:insert>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./examinee_templ.xhtml">
+
+            <ui:define name="content">
+                <style type="text/css"> 
+                    /*demo*/
+                    .ui-dataview-list .ui-dataview-row {
+                        border-bottom: 1px solid #A8A8A8;
+                        padding: 25px 10px;
+                        /* with the exported variables from Nova and Luna Themes*/
+                        border-bottom-color: #A8A8A8;
+                    }
+
+                    .logo {
+                        width: 5%;
+                    }
+                    .detail {
+                        width: 85%;
+                        padding-left: 25px;
+                    }
+                </style>
+
+                <h:form id="form">
+
+                    <p:dataTable var="f" value="#{examineeController.tests}">
+                        <f:facet name="header">Pregled testova</f:facet>
+                        
+                        <p:column headerText="Ime" sortBy="#{f.name}">
+                            <h:outputText value="#{f.name}" style="font-weight: bold"/>
+                        </p:column>
+
+                        <p:column headerText="Informacije">
+                            <h:outputText value="#{f.basicInfo}" style="font-style: italic"/> 
+                        </p:column>
+
+                        <p:column headerText="Pocetak testa" sortBy="#{f.startTime}">
+                            <h:outputText value="#{f.startTime}"></h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Kraj testa" sortBy="#{f.endTime}">
+                            <h:outputText value="#{f.endTime}"></h:outputText>
+                        </p:column>  
+                        <p:column>
+                            <p:commandButton actionListener="#{examineeController.chooseTest(f)}"
+                                             update=":form:fDetail" oncomplete="PF('fDialog').show()" title="Detaljnije"></p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+
+                    <p:dialog header="Detalji testa" widgetVar="fDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                        <p:outputPanel id="fDetail" style="text-align:center;">
+                            <h:outputText value="#{examineeController.testToView.name}"></h:outputText><br/>
+                            <h:outputText value="#{examineeController.testToView.basicInfo}"></h:outputText>
+                            <p:panelGrid  columns="2" rendered="#{not empty examineeController.testToView}" columnClasses="label,value">
+                                <h:outputText value="Autor:" />
+                                <h:outputText value="#{examineeController.testToView.userData.username}" />
+
+                                <h:outputText value="Datum pocetka:" />
+                                <h:outputText value="#{examineeController.testToView.startTime}" />
+
+                                <h:outputText value="Datum kraja:" />
+                                <h:outputText value="#{examineeController.testToView.endTime}" />
+
+                                <h:outputText value="Trajanje izrade:" />
+                                <h:outputText value="#{examineeController.testToView.duration}"/>
+
+                                <h:outputText value="Maksimalan broj poena:" />
+                                <h:outputText value="#{examineeController.testToView.getMaxPoints()}" />
+                            </p:panelGrid><br/>
+
+                            <p:commandButton value="Zapocni resavanje"
+                                             actionListener="#{examineeController.startTest()}"
+                                             rendered="#{examineeController.filledTest == null and not examineeCntroller.testToViewClosed}"></p:commandButton><br/>
+                            <h:outputText value="Test je vec odradjen"
+                                          rendered="#{examineeController.filledTest.currentState == 'FINISHED'}"></h:outputText><br/>
+                            <p:commandButton value="Pregled"
+                                             actionListener="#{examineeController.viewTestDetails()}"
+                                             rendered="#{examineeController.filledTest.currentState == 'FINISHED'}"></p:commandButton><br/>
+                            <h:outputText value="Test je zatvoren"
+                                          rendered="#{examineeController.testToViewClosed}"></h:outputText><br/>
+                        </p:outputPanel>
+                    </p:dialog>
+                    
+                </h:form>
+                
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

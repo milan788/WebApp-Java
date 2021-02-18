@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="./examinee_templ.xhtml">
+
+            <ui:define name="content">
+                <h:form>
+                    <p:panelGrid columns="2">
+                        <h:outputText value='Broj odradjenih pitanja: '></h:outputText>
+                        <h:outputText value="#{examineeController.surveyFiller.answeredQuestionBuilders.size()} / 
+                                      #{examineeController.surveyToView.questions.size()}"></h:outputText>
+
+                        <p:commandButton value="Vrati se na resavanje" 
+                                         action="examinee_survey_filler"></p:commandButton>
+                        <p:commandButton value="Predaj odgovore" 
+                                         actionListener="#{examineeController.archiveSurveyUnfinished()}"></p:commandButton>
+                        <p:commandButton value="Predaj odgovore i zakljucaj anketu" 
+                                         actionListener="#{examineeController.archiveSurveyFinished()}"></p:commandButton>
+                        
+                    </p:panelGrid>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

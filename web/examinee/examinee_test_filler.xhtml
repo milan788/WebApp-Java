@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./examinee_templ.xhtml">
+
+            <ui:define name="content">
+                <p:poll interval="1" 
+                        listener="#{examineeController.timerUpdate()}" 
+                        update="txt_count" 
+                        rendered="#{examineeController.testFiller.editable}"/><br/>
+                <h:outputText id="txt_count" value="#{examineeController.timeLeft}" rendered="#{examineeController.testFiller.editable}"/><br/>
+                <h:outputText value="#{examineeController.timeMessage}" rendered="#{examineeController.testFiller.editable}"></h:outputText><br/>
+                <h:form id="main_form">                                           
+                    <p:panelGrid columns="1" style="margin:0 auto">
+                        <h:outputText value="Poeni : #{examineeController.testFiller.getScore()} / #{examineeController.testFiller.form.maxPoints}"
+                                      rendered="#{not examineeController.testFiller.editable}"></h:outputText>
+                        <p:commandButton type="submit" value="Nazad" update="main_form" 
+                                         actionListener="#{examineeController.toTestsView()}"></p:commandButton>
+
+                        <h:outputText value="#{examineeController.testToView.name}"></h:outputText>
+                        <h:outputText value="#{examineeController.testToView.basicInfo}"></h:outputText>
+
+                        <p:repeat value="#{examineeController.testFiller.answeredQuestionBuilders}" var="aqBuilder">
+                            <p:panelGrid columns="1" style="width:100%">
+                                <h:outputText value="#{aqBuilder.q.text}"></h:outputText>
+                                <p:inputText value="#{aqBuilder.chosenAnswer}"
+                                             rendered="#{aqBuilder.q.answer.type=='NUMBER' or aqBuilder.q.answer.type=='SHORT_TEXT'}"
+                                             disabled="#{not examineeController.testFiller.editable}"></p:inputText>
+                                <p:selectOneRadio value="#{aqBuilder.chosenAnswer}"
+                                                  rendered="#{aqBuilder.q.answer.type=='CHOOSE_ONE'}"
+                                                  disabled="#{not examineeController.testFiller.editable}">
+                                    <f:selectItems value="#{aqBuilder.labels}" var="label" itemLabel="#{label}" itemValue="#{label}" />
+                                </p:selectOneRadio>
+
+                                <p:selectManyCheckbox value="#{aqBuilder.chosenAnswers}"
+                                                      rendered="#{aqBuilder.q.answer.type=='CHOOSE_MANY'}"
+                                                      disabled="#{not examineeController.testFiller.editable}">
+                                    <f:selectItems value="#{aqBuilder.labels}" var="label" itemLabel="#{label}" itemValue="#{label}" />
+                                </p:selectManyCheckbox>    
+
+                                <h:outputText value="#{aqBuilder.score} / #{aqBuilder.maxPoints()}"
+                                              rendered="#{not examineeController.testFiller.editable}"></h:outputText>
+                            </p:panelGrid>
+                        </p:repeat>
+
+                        <p:commandButton type="submit" value="Zavrsi test" update="main_form" 
+                                         actionListener="#{examineeController.submitTest()}" 
+                                         disabled="#{not examineeController.testFiller.editable}"></p:commandButton>
+                    </p:panelGrid>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

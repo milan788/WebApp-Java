@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./admin_templ.xhtml">
+
+            <ui:define name="admin_content">
+                <style type="text/css"> 
+                    .ui-dataview-list .ui-dataview-row {
+                        border-bottom: 1px solid #A8A8A8;
+                        padding: 25px 10px;
+                        border-bottom-color: #A8A8A8;
+                    }
+
+                    .logo {
+                        width: 5%;
+                    }
+                    .detail {
+                        width: 85%;
+                        padding-left: 25px;
+                    }
+                </style>
+
+                <h:form id="form">
+                    <p:dataView var="user" value="#{adminController.users}" rows="12" paginator="true" rowsPerPageTemplate="6,12,16"
+                                paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                gridIcon="pi pi-th-large" listIcon="pi pi-bars">
+
+                        <p:dataViewListItem>
+                            <h:panelGrid columns="3" style="width:100%" columnClasses="logo,detail">
+
+                                <p:outputPanel>
+                                    <h:panelGrid columns="2" cellpadding="5">
+                                        <h:outputText value="Ime" />
+                                        <h:outputText value="#{user.name}" />
+
+                                        <h:outputText value="Prezime" />
+                                        <h:outputText value="#{user.surname}" />
+
+                                        <h:outputText value="Korisnicko ime" />
+                                        <h:outputText value="#{user.username}" />
+
+                                        <h:outputText value="Tip" />
+                                        <h:outputText value="#{user.type}" />
+                                    </h:panelGrid>
+                                </p:outputPanel>
+
+                                <p:commandLink update=":form:userDetail" oncomplete="PF('userDialog').show()" title="View Detail">
+                                    <h:outputText value="Prikazi detalje" style="margin:0 auto;" />
+                                    <f:setPropertyActionListener value="#{user}" target="#{adminController.selectedUser}" />
+                                </p:commandLink>
+                            </h:panelGrid>
+                        </p:dataViewListItem>
+                    </p:dataView>
+
+                    <p:dialog header="Informacije o korisniku" widgetVar="userDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                        <p:outputPanel id="userDetail" style="text-align:center;">
+                            <p:panelGrid  columns="2" rendered="#{not empty adminController.selectedUser}" columnClasses="label,value">
+
+                                <h:outputText value="Ime" />
+                                <p:inputText value="#{adminController.selectedUser.name}" />
+
+                                <h:outputText value="Prezime" />
+                                <p:inputText value="#{adminController.selectedUser.surname}" />
+
+                                <h:outputText value="Korisnicko ime" />
+                                <p:inputText value="#{adminController.selectedUser.username}" />
+
+                                <h:outputText value="Mesto rodjenja" />
+                                <p:inputText value="#{adminController.selectedUser.placeOfBirth}" />
+                                
+                                <h:outputText value="Datum rodjenja" />
+                                <p:inputText placeholder="DD.MM.YYYY"
+                                             value="#{registrationController.dateOfBirth}">
+                                    <f:convertDateTime pattern="dd.mm.yyyy"/>
+                                </p:inputText>
+
+                                <h:outputText value="JMBG" />
+                                <p:inputText value="#{adminController.selectedUser.jmbg}" />
+
+                                <h:outputText value="Telefon" />
+                                <p:inputText value="#{adminController.selectedUser.phoneNumber}" />
+
+                                <h:outputText value="E-mail" />
+                                <p:inputText value="#{adminController.selectedUser.email}" />
+
+                                <p:commandButton value="Sacuvaj promene" actionListener="#{adminController.submitChange()}"                                                 
+                                                 update="form"></p:commandButton>                                
+
+                                <p:commandButton value="Obrisi korisnika" actionListener="#{adminController.deleteUser()}"                                                 
+                                                 update="form"></p:commandButton>                                
+                            </p:panelGrid>
+                        </p:outputPanel>
+                    </p:dialog>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

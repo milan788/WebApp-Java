@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+        <h:outputStylesheet name="css/indexLayout.css"/>
+    </h:head>
+    <h:body>
+        <div id="parent">
+            <h:form id="form_login">
+                
+                <p:inputText placeholder="Korisnicko ime" value="#{loginController.username}" style="margin-bottom: 10px" class="login_form_element"></p:inputText>
+
+                <p:password placeholder="Lozinka" value="#{loginController.password}" style="margin-bottom: 10px" class="login_form_element"></p:password>
+                
+                <h:outputText value="#{loginController.errorMessage}"></h:outputText>
+                
+                <p:commandButton value="Log in" action="#{loginController.login()}"
+                                 update="form_login"
+                                 style="margin-bottom: 10px" class="login_form_element"></p:commandButton>                   
+
+                <h:panelGrid columns="1">
+                    <p:link outcome="registration" value="Registracija"></p:link> 
+                    <p:link outcome="password_change" value="Promena lozinke"></p:link>
+                </h:panelGrid>
+                
+            </h:form>   
+        </div>
+    </h:body>
+</html>
+

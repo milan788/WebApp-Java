@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./examinee_templ.xhtml">
+
+            <ui:define name="content">
+                <style type="text/css"> 
+                    /*demo*/
+                    .ui-dataview-list .ui-dataview-row {
+                        border-bottom: 1px solid #A8A8A8;
+                        padding: 25px 10px;
+                        /* with the exported variables from Nova and Luna Themes*/
+                        border-bottom-color: #A8A8A8;
+                    }
+
+                    .logo {
+                        width: 5%;
+                    }
+                    .detail {
+                        width: 85%;
+                        padding-left: 25px;
+                    }
+                </style>
+
+                <h:form id="form">
+
+                    <p:dataTable var="f" value="#{examineeController.surveys}">
+                        <f:facet name="header">Pregled anketa</f:facet>
+                        
+                        <p:column headerText="Ime" sortBy="#{f.name}">
+                            <h:outputText value="#{f.name}" style="font-weight: bold"/>
+                        </p:column>
+
+                        <p:column headerText="Informacije">
+                            <h:outputText value="#{f.basicInfo}" style="font-style: italic"/> 
+                        </p:column>
+
+                        <p:column headerText="Pocetak ankete" sortBy="#{f.startTime}">
+                            <h:outputText value="#{f.startTime}"></h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Kraj ankte" sortBy="#{f.endTime}">
+                            <h:outputText value="#{f.endTime}"></h:outputText>
+                        </p:column>  
+
+                        <p:column>
+                            <p:commandButton update=":form:fDetail" oncomplete="PF('fDialog').show()" title="Detaljnije"
+                                         actionListener="#{examineeController.chooseSurvey(f)}"></p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+
+                    <p:dialog header="Detalji ankete" widgetVar="fDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                        <p:outputPanel id="fDetail" style="text-align:center;">
+                            <h:outputText value="#{examineeController.surveyToView.name}"></h:outputText><br/>
+                            <h:outputText value="#{examineeController.surveyToView.basicInfo}"></h:outputText><br/>
+                            <p:panelGrid  columns="2" rendered="#{not empty examineeController.surveyToView}" columnClasses="label,value">
+                                <h:outputText value="Autor:" />
+                                <h:outputText value="#{examineeController.surveyToView.userData.username}" />
+
+                                <h:outputText value="Datum pocetka:" />
+                                <h:outputText value="#{examineeController.surveyToView.startTime}" />
+
+                                <h:outputText value="Datum kraja:" />
+                                <h:outputText value="#{examineeController.surveyToView.endTime}" />
+
+                            </p:panelGrid>
+                            <h:outputText value="Anketa je personalizovana" style="font-style: italic" 
+                                          rendered="#{examineeController.surveyToView.personalized}"/><br/>
+
+                            <p:commandButton value="Zapocni popunjavanje"
+                                             actionListener="#{examineeController.startSurvey()}"
+                                             rendered="#{examineeController.filledSurvey == null and not examineeCntroller.surveyToViewClosed}"></p:commandButton><br/>
+                            <p:commandButton value="Nastavi popunjavanje"
+                                             actionListener="#{examineeController.startSurvey()}"
+                                             rendered="#{examineeController.filledSurvey.currentState == 'UNFINISHED'}"></p:commandButton><br/>
+                            <h:outputText value="Anketa je vec odradjena"
+                                          rendered="#{examineeController.filledSurvey.currentState == 'FINISHED'}"></h:outputText><br/>
+                            <p:commandButton value="Pregled"
+                                             actionListener="#{examineeController.viewSurveyDetails()}"
+                                             rendered="#{examineeController.filledSurvey.currentState == 'FINISHED'}"></p:commandButton><br/>
+                            <h:outputText value="Anketa je zatvorena"
+                                          rendered="#{examineeController.surveyToViewClosed}"></h:outputText><br/>
+                        </p:outputPanel>
+                    </p:dialog>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>
